@@ -1,4 +1,5 @@
-from django.http import HttpResponse
+from decimal import Decimal
+
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -38,12 +39,15 @@ def account_detail(request, pk):
         account.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-@api_view()
+
+@api_view(["POST"])
 def deposit(request):
-
-
-
-
+    account_number = request.data['account_number']
+    amount = request.data['amount']
+    account = get_object_or_404(Account, pk=account_number)
+    account.account_balance += Decimal(amount)
+    account.save()
+    return Response(data={"message": "Transaction Successful"}, status=status.HTTP_200_OK)
 
 # @api_view()
 # def account_detail(request, pk):

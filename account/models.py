@@ -13,7 +13,7 @@ class Account(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     pin = models.CharField(max_length=4, validators=[validate_pin])
-    account_balance = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
+    account_balance = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     ACCOUNT_TYPE = [
         ('S', 'SAVINGS'),
         ('C', 'CURRENT'),
