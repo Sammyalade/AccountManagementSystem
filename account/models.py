@@ -21,7 +21,6 @@ class Account(models.Model):
     ]
 
     account_type = models.CharField(max_length=1, choices=ACCOUNT_TYPE, default='SAVINGS')
-    transaction = models.ManyToOneRel
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}, {self.account_type}, {self.account_balance}'
