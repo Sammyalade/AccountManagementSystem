@@ -21,6 +21,7 @@ class Account(models.Model):
     ]
 
     account_type = models.CharField(max_length=1, choices=ACCOUNT_TYPE, default='SAVINGS')
+    transaction = models.ManyToOneRel
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}, {self.account_type}, {self.account_balance}'
@@ -39,9 +40,9 @@ class Transaction(models.Model):
         ('P', 'PENDING')
 
     ]
-    account = models.ForeignKey(Account, on_delete=models.CASCADE, null=True)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, related_name='transactions')
     transaction_type = models.CharField(max_length=3, choices=TRANSACTION_TYPE, default='CRE')
     transaction_time = models.DateTimeField(auto_now_add=True)
-    amount = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
-    description = models.TextField()
+    amount = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
+    description = models.TextField(blank=True)
     transaction_status = models.CharField(max_length=1, choices=TRANSACTION_STATUS, default='S')

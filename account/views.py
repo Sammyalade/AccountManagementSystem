@@ -1,10 +1,11 @@
+from datetime import datetime
 from decimal import Decimal
 
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Account
+from .models import Account, Transaction
 from .serializers import AccountSerializer, AccountCreateSerializer
 
 
@@ -43,11 +44,39 @@ def account_detail(request, pk):
 @api_view(["POST"])
 def deposit(request):
     account_number = request.data['account_number']
-    amount = request.data['amount']
+    amount = Decimal(request.data['amount'])
     account = get_object_or_404(Account, pk=account_number)
-    account.account_balance += Decimal(amount)
+    account.account_balance += amount
     account.save()
+    Transaction.objects.create(
+        account=account,
+        amount=amount,
+    )
     return Response(data={"message": "Transaction Successful"}, status=status.HTTP_200_OK)
+
+
+@api_view(["PATCH"])
+def withdraw(request):
+    account_number = request.data['account_number']
+    amount = request.data['amount']
+    pin = request.data['pin']
+    transaction_type = request.data['transaction_type']
+    account = get_object_or_404(Account, pk=account_number)
+    if account.pin == pin:
+        if account.account_balance >= Decimal(amount):
+            account.account_balance -= Decimal(amount)
+            account.save()
+            Transaction.objects.create(
+                account=account,
+                amount=amount,
+                transaction_type=transaction_type
+            )
+            return Response(data={"message": "Withdrawal Successful"}, status=status.HTTP_200_OK)
+        else:
+            return Response(data={"message": "Insufficient Balance"},
+                            status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response(data={"message": "Incorrect pin"}, status=status.HTTP_400_BAD_REQUEST)
 
 # @api_view()
 # def account_detail(request, pk):
