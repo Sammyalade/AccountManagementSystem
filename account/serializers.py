@@ -19,7 +19,7 @@ class AccountSerializer(serializers.ModelSerializer):
 class AccountCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ['first_name', 'last_name', 'pin', 'account_type']
+        fields = ['account_number', 'first_name', 'last_name', 'pin', 'account_type']
 # account_number = serializers.CharField(max_length=10)
 # first_name = serializers.CharField(max_length=255)
 # last_name = serializers.CharField(max_length=255)
