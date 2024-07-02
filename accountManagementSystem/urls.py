@@ -22,7 +22,8 @@ admin.site.site_header = 'Account Management System'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("demo/", include("demo.urls")),
-    path('api/v1/', include('account.urls'))
+    path('api/v1/', include('account.urls')),
+    path('users/', include('user.urls'))
 ]
 
 # python manage.py runserver
